@@ -1,3 +1,5 @@
+// Curtis Fenner, 2017
+
 #pragma once
 
 #include <assert.h>

@@ -1,3 +1,5 @@
+// Curtis Fenner, 2017
+
 #include <limits.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -189,9 +191,9 @@ int main (int argc, char **argv) {
 	if (width > 191) {
 		width = 191;
 	}
-	width--;;
-	// [2 bar, space][1 status][4 line][1 space][N code][3 space, bar, space][1 status][4 line][1 space][N code][2 space, bar]
-	// 2 + 1 + 4 + 1 + N + 3 + 1 + 4 + 1 + N + 2 = 2N + 17 = width
+	width--;
+
+	// Compute the size of the file body on the left/right
 	size_t codeWidth = (width - 19) / 2;
 	width = codeWidth * 2 + 19;
 
@@ -205,9 +207,8 @@ int main (int argc, char **argv) {
 	//	printf("common lines %d\t%d\n", 1+int_vector_get(inCommon->left, i, SRC), 1+int_vector_get(inCommon->right, i, SRC));
 	//}
 
-	// Output the files in two columns
-
-	// Print headers in two columns
+	// Output the files in two columns:
+	// 1) Print headers in two columns
 	putchar('+');
 	for (size_t k = 0; k < width-2; k++) {
 		putchar('-');
@@ -224,7 +225,7 @@ int main (int argc, char **argv) {
 	}
 	printf("+\n");
 
-	// Print body in two columns
+	// 2) Print body in two columns
 	size_t leftLineNumber = 1;
 	size_t rightLineNumber = 1;
 	size_t leftOffset = 0;
@@ -233,7 +234,6 @@ int main (int argc, char **argv) {
 	size_t rightLineCount = char_vector_vector_size(rightContents);
 
 	char_vector* blank = char_vector_make();
-	//char_vector_append(blank, '@');
 
 	while (leftLineNumber <= leftLineCount || rightLineNumber <= rightLineCount) {
 		char_vector* leftLine;
@@ -334,12 +334,15 @@ int main (int argc, char **argv) {
 		// Draw right-side bar
 		printf(ColorNormal" |\n");
 
+		// Advance the cursor along the current line
 		if (leftLine != blank) {
 			leftOffset += codeWidth;
 		}
 		if (rightLine != blank) {
 			rightOffset += codeWidth;
 		}
+
+		// Advance the cursor to the next line
 		if (leftOffset >= char_vector_size(leftLine) && rightOffset >= char_vector_size(rightLine)) {
 			if (leftLine != blank) {
 				leftLineNumber++;
