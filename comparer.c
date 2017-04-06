@@ -170,12 +170,24 @@ char* paddedString(const char* reference, size_t size) {
 int main (int argc, char **argv) {
 	// Validate the arguments
 	if (argc != 3) {
-		printf("usage:\n\tcomparer <filename left> <filename right>\n");
+		printf("usage:\n");
+		printf("\tcomparer <filename left> <filename right>\n");
+		printf("\tcomparer git <filename>\n");
 		return EXIT_FAILURE;
 	}
 
 	// Open the files for reading
-	FILE* leftFile = fopen(argv[1], "r");
+	FILE* leftFile;
+	if (strcmp(argv[1], "git") == 0) {
+		// Read the checked-in contents of the file using
+		// git show
+		char* command = NEW_ARRAY(char, 100 + strlen(argv[2]));
+		sprintf(command, "git show HEAD:%s", argv[2]);
+		leftFile = popen(command, "r");
+	} else {
+		leftFile = fopen(argv[1], "r");
+	}
+
 	FILE* rightFile = fopen(argv[2], "r");
 	if (leftFile == NULL) {
 		printf("could not open `%s`\n", argv[1]);

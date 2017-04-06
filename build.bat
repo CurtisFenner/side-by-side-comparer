@@ -1,1 +1,1 @@
-clear && gcc comparer.c -std=c99 -Wall -Wextra -Werror -o comparer
+clear && gcc comparer.c -std=gnu99 -Wall -Wextra -Werror -o comparer
